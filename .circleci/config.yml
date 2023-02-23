@@ -88,7 +88,7 @@ commands:
   #           npm run migration:revert
   #             exit 0
   #           fi
-
+# Declaring of jobs
 jobs:
   build-frontend:
     docker:
