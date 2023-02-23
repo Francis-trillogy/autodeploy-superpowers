@@ -1,7 +1,7 @@
 version: 2.1
 
-# orbs:
-#   slack: circleci/slack@4.12.1
+orbs:
+  slack: circleci/slack@4.12.1
 
 commands:
   install_nodejs:
@@ -36,59 +36,58 @@ commands:
 
 
            
-  # notify_on_crash:
-  #   description: Notify slack channel with custorm message
-  #   steps:
-  #     - slack/notify:
-  #         channel: C04N08J69EH
-  #         event: fail
-  #         template: basic_fail_1
+  notify_on_crash:
+    description: Notify slack channel with custorm message
+    steps:
+      - slack/notify:
+          channel: C04R0FE40LC
+          event: fail
+          template: basic_fail_1
 
-  # notify_on_success:
-  #   description: Notify slack channel when a build run's succeffully
-  #   steps:
-  #     - slack/notify:
-  #         channel: C04N08J69EH
-  #         event: pass
-  #         template: success_tagged_deploy_1
+  notify_on_success:
+    description: Notify slack channel when a build run's succeffully
+    steps:
+      - slack/notify:
+          channel: C04R0FE40LC
+          event: pass
+          template: success_tagged_deploy_1
            
-  # destroy-environment:
-  #   description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-  #   parameters:
-  #     when_to_run:
-  #       type: string
-  #       default: on_fail
-  #   steps:
-  #     - run:
-  #         name: Destroy environments
-  #         when: on_fail
-  #         command: |
-  #           aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
-  #           aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-  #           aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+  destroy-environment:
+    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+    parameters:
+      when_to_run:
+        type: string
+        default: on_fail
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
           
 
-  # revert-migrations:
-  #   description: Revert the last migration if successfully run in the current workflow.
-  #   parameters:
-  #     When_to_run: 
-  #       type: string
-  #       default: on_fail
-  #   steps:
-  #     - run:
-  #         name: Revert migrations
-  #         when: on_fail
-  #         command: |
+  revert-migrations:
+    description: Revert the last migration if successfully run in the current workflow.
+    parameters:
+      When_to_run: 
+        type: string
+        default: on_fail
+    steps:
+      - run:
+          name: Revert migrations
+          when: on_fail
+          command: |
 
-  #           SUCCESS= $(curl --insecure https://kvdb.io/WzMhHUBnWDf2pQnWKfXHLR/migration_${CIRCLE_WORKFLOW_ID:0:7})
-  #           if(( $SUCCESS == 1 )); 
-  #           then
-  #             cd ~/project/backend
-  #             npm install
-  #           npm run migration:revert
-  #             exit 0
-  #           fi
-# Declaring of jobs
+            SUCCESS= $(curl --insecure https://kvdb.io/WzMhHUBnWDf2pQnWKfXHLR/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            if(( $SUCCESS == 1 )); 
+            then
+              cd ~/project/backend
+              npm install
+            npm run migration:revert
+            fi
+
 jobs:
   build-frontend:
     docker:
@@ -106,8 +105,8 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-      # - notify_on_success
-      # - notify_on_crash
+      - notify_on_success
+      - notify_on_crash
 
   build-backend:
     docker:
@@ -125,8 +124,8 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
-      # - notify_on_success
-      # - notify_on_crash
+      - notify_on_success
+      - notify_on_crash
   test-frontend:
     docker:
       - image: cimg/node:13.8.0
@@ -143,8 +142,8 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-test
-      # - notify_on_success
-      # - notify_on_crash
+      - notify_on_success
+      - notify_on_crash
 
   test-backend:
     docker:
@@ -162,8 +161,8 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: backend-test
-      # - notify_on_success
-      # - notify_on_crash
+      - notify_on_success
+      - notify_on_crash
 
   scan-frontend:
     docker:
@@ -181,8 +180,8 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-scan
-      # - notify_on_success
-      # - notify_on_crash     
+      - notify_on_success
+      - notify_on_crash     
   # check
   scan-backend:
     docker:
@@ -200,8 +199,8 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: backend-scan
-      # - notify_on_success
-      # - notify_on_crash
+      - notify_on_success
+      - notify_on_crash
 
   deploy-infrastructure:
     docker:
@@ -244,9 +243,9 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      # - notify_on_success
-      # - notify_on_crash
-      # - destroy-environment
+      - notify_on_success
+      - notify_on_crash
+      - destroy-environment
 
   configure-infrastructure:
     docker:
@@ -277,9 +276,9 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
             exit 0
-      # - notify_on_success
-      # - notify_on_crash
-      # - destroy-environment
+      - notify_on_success
+      - notify_on_crash
+      - destroy-environment
 
   run-migrations:
     docker:
@@ -309,10 +308,10 @@ jobs:
             fi
             exit 0
       # Code to notify of success or failure
-      # - notify_on_success
-      # - notify_on_crash
+      - notify_on_success
+      - notify_on_crash
       # Here's where you will add some code to rollback on failure  
-      # - destroy-environment
+      - destroy-environment
 
   deploy-frontend:
     docker:
@@ -335,7 +334,7 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            BACKEND_PUBLIC_IP=$(aws --region us-west-2 ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            BACKEND_PUBLIC_IP=$(aws --region us-east-1 ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             export API_URL="http://${BACKEND_PUBLIC_IP}:3030"
             echo "${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
@@ -348,10 +347,10 @@ jobs:
             npm run build 
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      # - notify_on_success
-      # - notify_on_crash
-      # - destroy-environment
-      # - revert-migrations
+      - notify_on_success
+      - notify_on_crash
+      - destroy-environment
+      - revert-migrations
 
   deploy-backend:
     docker:
@@ -391,10 +390,10 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure
-      # - notify_on_success
-      # - notify_on_crash
-      # - destroy-environment
-      # - revert-migrations
+      - notify_on_success
+      - notify_on_crash
+      - destroy-environment
+      - revert-migrations
 
   smoke-test:
     docker:
@@ -436,11 +435,11 @@ jobs:
                 exit 1
               fi
       # Here's where you will add some code to rollback on failure 
-      # - notify_on_success
-      # - notify_on_crash
-      # - destroy-environment
-      # - revert-migrations
-# # Workflows-how jobs will execute     
+      - notify_on_success
+      - notify_on_crash
+      - destroy-environment
+      - revert-migrations
+# Workflows-how jobs will execute     
 workflows:
   my_workflows:
     jobs:
