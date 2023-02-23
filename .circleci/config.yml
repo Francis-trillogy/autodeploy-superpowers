@@ -85,7 +85,7 @@ commands:
             then
               cd ~/project/backend
               npm install
-            npm run migration:revert
+              npm run migration:revert
             fi
 
 jobs:
@@ -411,6 +411,8 @@ jobs:
             BACKEND_PUBLIC_IP=$(aws --region us-east-1 ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             export API_URL="http://${BACKEND_PUBLIC_IP}:3030"
             echo "${API_URL}"
+
+            sleep 60
             if curl -s "${API_URL}/api/status" | grep "ok"
             then
                 exit 0
@@ -422,6 +424,8 @@ jobs:
           command: |
               Frontend_URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com/#/employees"            
               echo "${Frontend_URL}"
+
+
               if curl -s "${Frontend_URL}" | grep "Welcome"
               then
                   # Change this to 0 after the job fails
