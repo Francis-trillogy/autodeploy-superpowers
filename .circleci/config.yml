@@ -253,9 +253,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: 
-            - '8d:5c:fa:8a:f6:19:91:9e:b7:f4:90:97:9c:5c:c7:ff'
-
+          fingerprints: ['33:1b:ef:ef:8f:a3:aa:5a:e5:1a:19:23:4b:07:c8:f4']
       - attach_workspace:
           at: ~/
       - run:
@@ -357,12 +355,10 @@ jobs:
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: 
-            - '8d:5c:fa:8a:f6:19:91:9e:b7:f4:90:97:9c:5c:c7:ff'
+          fingerprints: ['33:1b:ef:ef:8f:a3:aa:5a:e5:1a:19:23:4b:07:c8:f4']
       # attach workspace
       - attach_workspace:
-          at: ~/
-          
+          at: ~/     
       # install nodejs, awscli and ansible
       - install_nodejs
       - install_awscli
