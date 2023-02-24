@@ -253,7 +253,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ['8d:ac:b2:3f:ba:b8:31:03:b2:1f:6e:72:8d:e7:04:7d']
+          fingerprints: ['6e:da:4f:b7:24:5a:29:17:67:37:18:b3:5f:eb:9e:19']
 
       - attach_workspace:
           at: ~/
@@ -359,7 +359,7 @@ jobs:
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: ['8d:ac:b2:3f:ba:b8:31:03:b2:1f:6e:72:8d:e7:04:7d']
+          fingerprints: ['6e:da:4f:b7:24:5a:29:17:67:37:18:b3:5f:eb:9e:19']
       # attach workspace
       - attach_workspace:
           at: ~/
@@ -412,26 +412,26 @@ jobs:
             export API_URL="http://${BACKEND_PUBLIC_IP}:3030"
             echo "${API_URL}"
 
-            # if curl --connect-timeout 60 "${API_URL}/api/status" | grep "ok"
-            # then
-            #     exit 0
-            # else
-            #     exit 1
-            # fi   
-      # - run:
-      #     name: Frontend smoke test.
-      #     command: |
-      #         Frontend_URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com/#/employees"            
-      #         echo "${Frontend_URL}"
+            if curl --connect-timeout 60 "${API_URL}/api/status" | grep "ok"
+            then
+                exit 0
+            else
+                exit 1
+            fi   
+      - run:
+          name: Frontend smoke test.
+          command: |
+              Frontend_URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com/#/employees"            
+              echo "${Frontend_URL}"
 
 
-      #         if curl -s "${Frontend_URL}" | grep "Welcome"
-      #         then
-      #             # Change this to 0 after the job fails
-      #           exit 1
-      #         else
-      #           exit 1
-      #         fi
+              if curl -s "${Frontend_URL}" | grep "Welcome"
+              then
+                  # Change this to 0 after the job fails
+                exit 1
+              else
+                exit 1
+              fi
       # Here's where you will add some code to rollback on failure 
       - notify_on_success
       - notify_on_crash
