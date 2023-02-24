@@ -373,7 +373,7 @@ jobs:
           name: Deploy backend
           command: |
             cd backend
-            npm i
+            npm install
             npm run build
             cd ..
             tar -C backend -czvf artifact.tar.gz . 
@@ -430,8 +430,8 @@ jobs:
       # Here's where you will add some code to rollback on failure 
       - notify_on_success
       - notify_on_crash
-      - destroy-environment
-      - revert-migrations
+      # - destroy-environment
+      # - revert-migrations
 # Workflows-how jobs will execute     
 workflows:
   my_workflows:
