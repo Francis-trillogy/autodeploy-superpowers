@@ -81,6 +81,7 @@ commands:
           command: |
 
             SUCCESS=$(curl https://kvdb.io/WzMhHUBnWDf2pQnWKfXHLR/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            echo "$SUCCESS"
             if (( $SUCCESS == 1)); 
             then
               cd backend
