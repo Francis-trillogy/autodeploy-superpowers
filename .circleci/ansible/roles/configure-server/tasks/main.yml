@@ -14,19 +14,18 @@
   apt:
     autoremove: yes
 
-- name: install npm
+- name: Retrieve nodejs version 14 from source
   become: true
-  apt:
-      name: npm
-      state: latest
-      update_cache: yes
+  shell: |
+      curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 
 - name: install nodejs
   become: true
   apt:
-      name: nodejs
-      state: latest
-      update_cache: yes
+    name: nodejs
+    state: latest
+    update_cache: yes
+
 
 - name: install pm2
   become: true
@@ -35,3 +34,9 @@
     global: yes
     production: yes
     state: present
+
+- name: move Environment variables to /etc/profile.d/
+  become: true
+  copy:
+    src: myenv.sh
+    dest: /etc/profile.d/

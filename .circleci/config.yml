@@ -253,17 +253,15 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ['8d:5c:fa:8a:f6:19:91:9e:b7:f4:90:97:9c:5c:c7:ff']
+          fingerprints: 
+            - '8d:5c:fa:8a:f6:19:91:9e:b7:f4:90:97:9c:5c:c7:ff'
 
       - attach_workspace:
           at: ~/
-
       - run:
           name: Install dependencies
           command: |
             apk add --update --no-cache ansible tar gzip unzip openssh curl 
-            exit 0
-
       - run:  
           name: Install awscli, nodejs and npm
           command: |
@@ -336,7 +334,7 @@ jobs:
             BACKEND_PUBLIC_IP=$(aws --region us-east-1 ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             export API_URL="http://${BACKEND_PUBLIC_IP}:3030"
             echo "${API_URL}"
-            echo API_URL="http://${BACKEND_PUBLIC_IP}:3030" >> frontend/.env
+            echo API_URL="http://${BACKEND_PUBLIC_IP}:3030" >>frontend/.env
             cat frontend/.env
       - run:
           name: Deploy frontend objects
@@ -359,7 +357,8 @@ jobs:
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: ['8d:5c:fa:8a:f6:19:91:9e:b7:f4:90:97:9c:5c:c7:ff']
+          fingerprints: 
+            - '8d:5c:fa:8a:f6:19:91:9e:b7:f4:90:97:9c:5c:c7:ff'
       # attach workspace
       - attach_workspace:
           at: ~/
