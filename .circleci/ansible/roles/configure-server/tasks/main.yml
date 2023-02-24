@@ -14,18 +14,11 @@
   apt:
     autoremove: yes
 
-- name: Retrieve nodejs version 14 from source
+- name: Retrieve nodejs version 13 from source and install it
   become: true
   shell: |
-      curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-
-- name: install nodejs
-  become: true
-  apt:
-    name: nodejs
-    state: latest
-    update_cache: yes
-
+      curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+      apt-get install -y nodejs
 
 - name: install pm2
   become: true

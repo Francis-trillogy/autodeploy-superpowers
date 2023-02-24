@@ -10,9 +10,8 @@ commands:
       - run:
           name: nodejs14 package
           command: |
-            curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+            curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
             sudo apt-get install -y nodejs
-            sudo apt-get update && sudo apt-get upgrade
 
   install_awscli:
     description: aws command-line tool is used to run aws commands which interact with aws console
@@ -23,7 +22,7 @@ commands:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
-            sudo apt-get update && sudo apt upgrade
+
   install_ansible:
     description: configuration management tool for managing host i.e servers via ssh
     steps:
@@ -31,11 +30,8 @@ commands:
           name: ansible 
           command: |
             sudo apt-add-repository ppa:ansible/ansible -y
-            sudo apt-get update && sudo apt upgrade
             sudo apt install ansible
-
-
-           
+         
   notify_on_crash:
     description: Notify slack channel with custorm message
     steps:
@@ -271,7 +267,6 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
-            exit 0
       - notify_on_success
       - notify_on_crash
       - destroy-environment
@@ -323,7 +318,6 @@ jobs:
       - run:
           name: Install other dependencies - tar and gzip
           command: |
-            sudo apt-get update && sudo apt upgrade
             sudo apt-get install tar gzip 
     
       - run:
@@ -373,13 +367,20 @@ jobs:
           name: Deploy backend
           command: |
             cd backend
-            npm install
+
+            npm i
             npm run build
             cd ..
-            tar -C backend -czvf artifact.tar.gz . 
-            mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
-            mv artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/files
+
             cd .circleci/ansible
+            
+            mkdir files
+            cd files
+
+            tar -C ../../../backend -czvf artifact.tar.gz . 
+             
+            cd ../
+
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
