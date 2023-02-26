@@ -8,9 +8,9 @@ commands:
     description: installing specific nodejs version
     steps:
       - run:
-          name: nodejs14 package
+          name: nodejs13 package
           command: |
-            curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+            curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
             sudo apt-get install -y nodejs
 
   install_awscli:
@@ -155,7 +155,7 @@ jobs:
             npm install
             npm run test
       - save_cache:
-          paths: [frontend/node_modules]
+          paths: [backend/node_modules]
           key: backend-test
       - notify_on_success
       - notify_on_crash
@@ -193,7 +193,7 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
       - save_cache:
-          paths: [frontend/node_modules]
+          paths: [backend/node_modules]
           key: backend-scan
       - notify_on_success
       - notify_on_crash
