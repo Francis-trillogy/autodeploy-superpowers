@@ -8,9 +8,9 @@ commands:
     description: installing specific nodejs version
     steps:
       - run:
-          name: nodejs15 package
+          name: nodejs14 package
           command: |
-            curl -sL https://deb.nodesource.com/setup_15.x | sudo -E bash -
+            curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
             sudo apt-get install -y nodejs
 
   install_awscli:
@@ -273,7 +273,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: cimg/base:2023.02
+      - image: cimg/base:stable
     steps:
       - checkout
       - restore_cache:
@@ -305,7 +305,7 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: cimg/base:2023.02
+      - image: cimg/base:stable
     steps:
       - checkout
       - restore_cache:
@@ -344,7 +344,7 @@ jobs:
   deploy-backend:
     docker:
       # Docker image here that supports Ansible
-      - image: cimg/base:2023.02
+      - image: cimg/base:stable
     steps:
       - checkout
       # Add ssh keys with fingerprint
