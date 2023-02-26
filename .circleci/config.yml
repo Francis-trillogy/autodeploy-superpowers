@@ -77,7 +77,7 @@ commands:
           command: |
 
             SUCCESS=$(curl https://kvdb.io/MZB1otHi4Q8HzghMLtm2ub/migration_${CIRCLE_WORKFLOW_ID:0:7})
-            if (( $SUCCESS == 1)); 
+            if (( $SUCCESS == 1 ));
             then
               cd ~/project/backend
               npm install
@@ -281,6 +281,11 @@ jobs:
       # install nodejs, awscli and ansible
       - install_nodejs
       - install_awscli
+
+      - run:
+          name: Install other dependencies
+          command: |
+            sudo apt-get curl
       - run:
           name: Run migrations
           command: |
@@ -318,7 +323,7 @@ jobs:
       - run:
           name: Install other dependencies - tar and gzip
           command: |
-            sudo apt-get install tar gzip 
+            sudo apt-get install tar gzip curl
     
       - run:
           name: Get backend url
@@ -362,7 +367,7 @@ jobs:
           name: Install other dependencies - tar and gzip
           command: |
             sudo apt-get update && sudo apt upgrade
-            sudo apt-get install tar gzip 
+            sudo apt-get install tar gzip curl
       - run:
           name: Deploy backend
           command: |
@@ -378,7 +383,6 @@ jobs:
             export TYPEORM_MIGRATIONS_DIR=./migrations
             export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
             export TYPEORM_MIGRATIONS=./migrations/*.ts
-
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
