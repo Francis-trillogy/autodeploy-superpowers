@@ -76,7 +76,7 @@ commands:
           when: on_fail
           command: |
 
-            SUCCESS=$(curl https://kvdb.io/WzMhHUBnWDf2pQnWKfXHLR/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            SUCCESS=$(curl https://kvdb.io/MZB1otHi4Q8HzghMLtm2ub/migration_${CIRCLE_WORKFLOW_ID:0:7})
             if (( $SUCCESS == 1)); 
             then
               cd ~/project/backend
@@ -249,7 +249,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ['f4:ef:f1:a4:8c:63:d2:d9:5e:4e:1a:6a:47:42:ad:d5']
+          fingerprints: ['00:4c:14:c6:65:ba:ee:54:73:57:30:ba:38:13:82:6f']
       - attach_workspace:
           at: ~/
       - run:
@@ -295,7 +295,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl https://kvdb.io/WzMhHUBnWDf2pQnWKfXHLR/migration_${CIRCLE_WORKFLOW_ID:0:7} \-d '1'
+              curl https://kvdb.io/MZB1otHi4Q8HzghMLtm2ub/migration_${CIRCLE_WORKFLOW_ID:0:7} \-d '1'
             fi
       # Code to notify of success or failure
       - notify_on_success
@@ -349,7 +349,7 @@ jobs:
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: ['f4:ef:f1:a4:8c:63:d2:d9:5e:4e:1a:6a:47:42:ad:d5']
+          fingerprints: ['00:4c:14:c6:65:ba:ee:54:73:57:30:ba:38:13:82:6f']
       # attach workspace
       - attach_workspace:
           at: ~/     
@@ -366,15 +366,16 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-           cd backend
-            npm i
+            cd backend
             npm run build
+            tar -czf artifact.tar.gz dist/* package*
             cd ..
-            tar -C backend -czvf artifact.tar.gz . 
-            mkdir ~/project/.circleci/ansible/roles/deploy/files/
-            mv artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/files
+            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+            # Environment variables
+            export TYPEORM_MIGRATIONS_DIR=./migrations
+            export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
+            export TYPEORM_MIGRATIONS=./migrations/*.ts
             cd .circleci/ansible
-            echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure
