@@ -24,7 +24,7 @@
 - name: install pm2
   become: true
   npm:
-    name: pm2
+    name: pm2 -g
     global: yes
     production: yes
     state: present
