@@ -276,18 +276,13 @@ jobs:
 
   run-migrations:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - restore_cache:
           keys: [backend-build]
-      - run:
-          name: Install other dependencies - tar and gzip
-          command: |
-            sudo apt-get install tar gzip 
 
-      # install nodejs, awscli 
-      - install_nodejs
+      # install awscli 
       - install_awscli
 
       - run:
