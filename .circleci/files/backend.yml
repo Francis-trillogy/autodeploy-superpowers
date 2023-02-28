@@ -28,7 +28,7 @@ Resources:
       InstanceType: t2.micro
       SecurityGroups:
         - Ref: InstanceSecurityGroup
-      KeyName: asante_techkey 
+      KeyName: asante-token 
       ImageId: ami-09cd747c78a9add63
       Tags:
         - Key: Name
