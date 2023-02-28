@@ -210,7 +210,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            sudo yum install -y tar gzip
+            yum install -y tar gzip
       - run: 
           name: Ensure back-end infrastucture exists
           command: |
@@ -285,7 +285,7 @@ jobs:
           name: Install other dependencies - tar and gzip
           command: |
             sudo apt-get install tar gzip 
-            
+
       # install nodejs, awscli 
       - install_nodejs
       - install_awscli
