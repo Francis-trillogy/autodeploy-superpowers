@@ -8,9 +8,9 @@ commands:
     description: installing specific nodejs version
     steps:
       - run:
-          name: nodejs14 package
+          name: nodejs16 package
           command: |
-            curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+            curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
             sudo apt-get install -y nodejs
             sudo apt-get update && sudo apt-get upgrade
 
@@ -371,16 +371,24 @@ jobs:
           name: Package Backend
           command: |
             cd backend
+            npm install
             npm run build
-            tar -czf artifact.tar.gz dist/* package*
             cd ..
-            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+            tar -C backend -czvf artifact.tar.gz . 
+            mkdir -p ~/project/.circleci/ansible/roles/deploy/files
+            mv artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/files
       - run:
           name: Deploy backend
           command: |
-            export TYPEORM_MIGRATIONS_DIR=./migrations
-            export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
-            export TYPEORM_MIGRATIONS=./migrations/*.ts
+            export TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
+            export TYPEORM_ENTITIES: "{{ lookup('env', 'TYPEORM_ENTITIES')}}"
+            export TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST')}}"
+            export TYPEORM_PORT: 5432
+            export TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME')}}"
+            export TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD')}}"
+            export TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE')}}"
+            export TYPEORM_MIGRATIONS: "{{ lookup('env', 'TYPEORM_MIGRATIONS')}}"
+            export TYPEORM_MIGRATIONS_DIR: "{{ lookup('env', 'TYPEORM_MIGRATIONS_DIR')}}"
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
