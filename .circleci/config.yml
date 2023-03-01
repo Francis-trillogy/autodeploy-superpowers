@@ -245,7 +245,7 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - add_ssh_keys:
@@ -272,14 +272,13 @@ jobs:
 
   run-migrations:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - restore_cache:
           keys: [backend-build]
       # install awscli 
       - install_awscli
-      - install_nodejs
 
       - run:
           name: Run migrations
@@ -306,7 +305,7 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - restore_cache:
@@ -344,7 +343,7 @@ jobs:
   deploy-backend:
     docker:
       # Docker image here that supports Ansible
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       # Add ssh keys with fingerprint
@@ -354,7 +353,7 @@ jobs:
       - attach_workspace:
           at: ~/     
       # install nodejs, awscli and ansible
-      - install_nodejs
+      # - install_nodejs
       - install_awscli
       - install_ansible
       
