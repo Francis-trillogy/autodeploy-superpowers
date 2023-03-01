@@ -206,7 +206,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            apk add --update --no-cache aws-cli tar gzip
+            apk add --update --no-cache curl aws-cli tar gzip
       - run: 
           name: Ensure back-end infrastucture exists
           command: |
@@ -258,7 +258,7 @@ jobs:
       - run:
           name: Install other dependencies 
           command: |
-            apk add --update --no-cache  aws-cli tar gzip ansible
+            apk add --update --no-cache curl aws-cli tar gzip ansible 
       - run:
           name: Configure server
           command: |
@@ -281,7 +281,7 @@ jobs:
       - run:
           name: Install other dependencies 
           command: |
-            apk add --update --no-cache  aws-cli nodejs npm tar gzip curl
+            apk add --update --no-cache curl aws-cli nodejs npm tar gzip
       - run:
           name: Run migrations
           command: |
