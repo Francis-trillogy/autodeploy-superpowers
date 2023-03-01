@@ -12,7 +12,6 @@ commands:
           command: |
             curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
             sudo apt-get install -y nodejs
-            sudo apt-get update && sudo apt-get upgrade
 
   install_awscli:
     description: aws command-line tool is used to run aws commands which interact with aws console
@@ -31,7 +30,7 @@ commands:
           name: ansible 
           command: |
             sudo apt-add-repository ppa:ansible/ansible -y
-            sudo apt install ansible
+            sudo apt install -y ansible
          
   notify_on_crash:
     description: Notify slack channel with custorm message
