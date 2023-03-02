@@ -7,17 +7,17 @@
 - name: "Unarchive backend files"
   unarchive:
     src:  ~/project/.circleci/ansible/roles/deploy/files/artifact.tar.gz
-    dest: backend-app
+    dest: project/backend-app
 
 - name: "Installing Node Dependencies"
   shell: |
-    cd backend-app
-    sudo npm install
+    cd project/backend-app
+    npm install
 - name: "Executing Node app with PM2"
   shell: |
-    cd backend-app
-    sudo pm2 stop default
-    sudo pm2 start npm -- start
+    cd project/backend-app
+    pm2 stop default
+    pm2 start npm -- start
   register: execute_node
 
 - name: print message
