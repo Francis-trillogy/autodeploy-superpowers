@@ -301,7 +301,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl https://kvdb.io/RViRZ98vZYufC7KmbsYZQX/Key \-d 'migration'
+              curl https://kvdb.io/RViRZ98vZYufC7KmbsYZQX/Migration \-d 'migration'
             fi
       # Code to notify of success or failure
       - notify_on_success
