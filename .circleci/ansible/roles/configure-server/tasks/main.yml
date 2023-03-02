@@ -9,10 +9,10 @@
   apt:
     upgrade: yes
 
-- name: "unzip"
+- name: "install unzip, tar, gzip" 
   become: true
   apt:
-    name: ["unzip"]
+    name: ["unzip", "tar", "gzip"]
     state: latest
     update_cache: yes
 
