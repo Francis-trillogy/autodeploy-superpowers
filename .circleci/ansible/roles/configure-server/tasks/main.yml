@@ -9,6 +9,13 @@
   apt:
     upgrade: yes
 
+- name: "unzip"
+  become: true
+  apt:
+    name: ["unzip"]
+    state: latest
+    update_cache: yes
+
 - name: "Install npm and nodejs"
   become: true
   apt:
