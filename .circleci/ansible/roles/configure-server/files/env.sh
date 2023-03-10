@@ -1,9 +1,9 @@
 export TYPEORM_CONNECTION=postgres
-export TYPEORM_ENTITIES=
-export TYPEORM_HOST=
-export TYPEORM_PORT=
-export TYPEORM_USERNAME=
-export TYPEORM_PASSWORD=
-export TYPEORM_DATABASE=
-export TYPEORM_MIGRATIONS=
-export TYPEORM_MIGRATIONS_DIR=
+export TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
+export TYPEORM_HOST=udapeople-production.cvxgyhmgsfdw.us-east-1.rds.amazonaws.com
+export TYPEORM_PORT=5432
+export TYPEORM_USERNAME=postgres
+export TYPEORM_PASSWORD=udapeople0912
+export TYPEORM_DATABASE=asante_techdb
+export TYPEORM_MIGRATIONS=./src/migrations/*.ts
+export TYPEORM_MIGRATIONS_DIR=./src/migrations
