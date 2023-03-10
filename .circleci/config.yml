@@ -7,9 +7,9 @@ commands:
     description: installing specific nodejs version
     steps:
       - run:
-          name: nodejs13.8.0 package
+          name: nodejs13 package
           command: |
-            curl -sL https://deb.nodesource.com/setup_13.8.0.x | sudo -E bash -
+            curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
             sudo apt-get install -y nodejs
 
   # install_awscli:
