@@ -1,25 +1,13 @@
 ---
-- name: "update apt packages"
+- name: "Install node js from nodesource repo"
   become: true
-  apt:
-    update_cache: yes
+  shell: |
+    curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 
-- name: "upgrade packages"
+- name: "install nodejs 14"
   become: true
   apt:
-    upgrade: yes
-
-- name: "install unzip, tar, gzip" 
-  become: true
-  apt:
-    name: ["unzip", "tar", "gzip"]
-    state: latest
-    update_cache: yes
-
-- name: "Install npm and nodejs"
-  become: true
-  apt:
-    name: ["npm", "nodejs"]
+    name: nodejs
     state: latest
     update_cache: yes
 
@@ -30,3 +18,19 @@
     global: yes
     production: yes
     state: present
+
+- name: "update apt packages"
+  become: true
+  apt:
+    update_cache: yes
+
+- name: "upgrade packages"
+  become: true
+  apt:
+    upgrade: yes
+
+- name: "copy over environment_variables"
+  become: true
+  copy:
+    src: env.sh
+    dest: /etc/profile.d/

@@ -1,23 +1,26 @@
 ---
-# - name: "Creates backend app directory"
-#   file:
-#     path:  backend-app
-#     state: directory
+- name: "create backend-app directory"
+  file:
+    paths: ~/backend-app
+    state: directory
 
 - name: "Unarchive backend files"
   unarchive:
     src:  artifact.tar.gz
-    dest: ubuntu
+    dest: ~/backend-app
 
 - name: "Installing Node Dependencies"
   shell: |
-    cd ubuntu
-    sudo npm install
+    cd ~/backend-app
+    npm i
+
 - name: "Executing Node app with PM2"
   shell: |
-    cd ubuntu/dist
-    sudo pm2 stop default
-    sudo pm2 start main.js
+    npm run build
+    sudo npm install forever -g
+    sudo npm install ts-node -g
+    forever start -c "ts-node -r tsconfig-paths/register -r dotenv/config src/main.ts" ./
+
   register: execute_node
 
 - name: print message
