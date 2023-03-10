@@ -3,6 +3,15 @@ version: 2.1
 orbs:
   slack: circleci/slack@4.12.1
 commands:
+
+  install-dependencies:
+    steps:
+      - run:
+          name: install necessary dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y tar gzip curl software-properties-common gnome-terminal
+
   install_nodejs:
     description: installing specific nodejs version
     steps:
@@ -91,6 +100,7 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       # install dependencies
+      - install-dependencies
       - install_nodejs
       - run:
           name: Build front-end
@@ -112,6 +122,7 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       # install dependencies
+      - install-dependencies
       - install_nodejs
       - run:
           name: Back-end build
@@ -133,6 +144,7 @@ jobs:
       - restore_cache:
           keys: [frontend-test]
       # install dependencies
+      - install-dependencies
       - install_nodejs
       - run:
           name: Run frontend Tests
@@ -154,6 +166,7 @@ jobs:
       - restore_cache:
           keys: [backend-test]
       # install dependencies
+      - install-dependencies
       - install_nodejs
       - run:
           name: Run backend tests
@@ -175,6 +188,7 @@ jobs:
       - restore_cache:
           keys: [frontend-scan]
       # install dependencies
+      - install-dependencies
       - install_nodejs
       - run:
           name: Run frontend scan
@@ -196,6 +210,7 @@ jobs:
       - restore_cache:
           keys: [backend-scan]
       # install dependencies
+      - install-dependencies
       - install_nodejs
       - run:
           name: Run backend Scan
@@ -260,6 +275,7 @@ jobs:
           at: ~/
 
       # install Dependencies
+      - install-dependencies
       - install_ansible
       - install_awscli
 
@@ -282,6 +298,7 @@ jobs:
           keys: [backend-build]
 
       # install Dependencies
+      - install-dependencies
       - install_awscli
       - install_nodejs
       - run:
@@ -317,6 +334,7 @@ jobs:
       # # install nodejs
       - install_nodejs
       - install_awscli
+      - install-dependencies
 
       - run:
           name: Get backend url
@@ -353,6 +371,7 @@ jobs:
       - attach_workspace:
           at: ~/
       # # install nodejs, awscli and ansible
+      - install-dependencies
       - install_nodejs
       - install_awscli
       - install_ansible
