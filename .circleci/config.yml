@@ -354,7 +354,7 @@ jobs:
       # Here's where you will add some code to rollback on failure
       - notify_on_success
       - notify_on_crash
-      # - destroy-environment
+      - destroy-environment
       # - revert-migrations
 
   smoke-test:
@@ -397,7 +397,7 @@ jobs:
       # Here's where you will add some code to rollback on failure
       - notify_on_success
       - notify_on_crash
-  # - destroy-environment
+      - destroy-environment
   # - revert-migrations
 # Workflows-how jobs will execute
 workflows:
