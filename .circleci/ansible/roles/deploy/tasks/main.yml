@@ -36,7 +36,7 @@
 
 - name: "Start app"
   shell: |
-    cd backend_app_dir
+    cd ~/backend_app_dir
     sudo npm install
     sudo npm run build
     sudo pm2 start npm -- start
