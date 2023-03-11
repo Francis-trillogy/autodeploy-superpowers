@@ -213,7 +213,7 @@ jobs:
       - notify_on_success
       - notify_on_crash
       - destroy-environment
-
+      
   configure-infrastructure:
     docker:
       - image: python:3.10-alpine3.16
@@ -398,8 +398,8 @@ jobs:
       # Here's where you will add some code to rollback on failure
       - notify_on_success
       - notify_on_crash
-      - destroy-environment
-      - revert-migrations
+      # - destroy-environment
+      # - revert-migrations
 # Workflows-how jobs will execute
 workflows:
   my_workflows:
