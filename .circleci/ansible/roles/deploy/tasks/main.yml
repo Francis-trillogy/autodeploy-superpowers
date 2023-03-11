@@ -35,11 +35,10 @@
     dest: /home/ubuntu/backend_app_dir
 
 - name: "Start app"
-  become: true
   shell: |
     cd /home/ubuntu/backend_app_dir
-    npm install
-    npm run build
-    pm2 start npm -- start
+    sudo npm install
+    sudo npm run build
+    sudo pm2 start npm -- start
 
   
