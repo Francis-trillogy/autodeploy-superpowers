@@ -24,10 +24,10 @@
     production: yes
     state: present
 
-- name: "Copy compressed files to instance"
+- name: "Unarchive backend files"
   become: true
-  copy:
-    src:  artifact.tar.gz
+  unarchive:
+    src:  ~/project/artifact.tar.gz
     dest: .
 
 - name: "Start app"
