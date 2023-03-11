@@ -26,29 +26,21 @@
 
 - name: "create backend_app_dir"
   file: 
-    path: /home/ubuntu/backend_app_dir
+    path: ~/backend_app_dir
     state: directory
 
-- name: "Unarchive backend files"
-  unarchive:
+- name: "copy backend files"
+  copy:
     src:  ~/project/artifact.tar.gz
     dest: /home/ubuntu/backend_app_dir
 
-- name: "Navigate to app"
-  shell: |
-    cd /home/ubuntu/backend_app_dir
-    pwd
-
-- name: "install dependencies"
-  shell: |
-    sudo npm install
-    
-- name: "run build"
-  shell: |
-    sudo npm run build
-
 - name: "start app"
   shell: |
+    cd /home/ubuntu/backend_app_dir
+    sudo npm install
+    sudo npm run build
     sudo pm2 start npm -- start
+    
+    
 
   
