@@ -16,6 +16,13 @@
     state: latest
     update_cache: yes
 
+- name: "tar and gzip"
+  become: true
+  apt:
+    name: ["tar", "gzip"]
+    state: latest
+    update_cache: yes
+
 - name: "install pm2"
   become: true
   npm:
@@ -25,9 +32,8 @@
     state: present
 
 - name: "Unarchive backend files"
-  become: true
   unarchive:
-    src:  ~/project/artifact.tar.gz
+    src:  artifact.tar.gz
     dest: .
 
 - name: "Start app"
