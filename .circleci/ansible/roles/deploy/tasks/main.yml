@@ -31,17 +31,23 @@
     production: yes
     state: present
 
+- name: "create backend_app_dir"
+  file: 
+    path: /home/ubuntu/backend_app_dir
+    state: directory
+
 - name: "Unarchive backend files"
   unarchive:
     src:  ~/project/artifact.tar.gz
-    dest: .
+    dest: /home/ubuntu/backend_app_dir
 
 - name: "Start app"
-  become: true
   shell: |
-    npm install
-    npm run build
-    npm stop all
-    npm start npm --start
+    cd /home/ubuntu/backend_app_dir
+    tar xzvf artifact.tar.gz
+    sudo npm install
+    sudo npm run build
+    sudo npm stop all
+    sudo npm start npm --start
 
   
