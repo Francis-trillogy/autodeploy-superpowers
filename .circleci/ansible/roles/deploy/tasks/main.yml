@@ -34,11 +34,21 @@
     src:  ~/project/artifact.tar.gz
     dest: /home/ubuntu/backend_app_dir
 
-- name: "Start app"
+- name: "Navigate to app"
   shell: |
-    cd ~/backend_app_dir
+    cd /home/ubuntu/backend_app_dir
+    pwd
+
+- name: "install dependencies"
+  shell: |
     sudo npm install
+    
+- name: "run build"
+  shell: |
     sudo npm run build
+
+- name: "start app"
+  shell: |
     sudo pm2 start npm -- start
 
   
