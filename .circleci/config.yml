@@ -3,43 +3,6 @@ version: 2.1
 orbs:
   slack: circleci/slack@4.12.1
 commands:
-
-  install-dependencies:
-    steps:
-      - run:
-          name: install necessary dependencies
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y tar gzip curl software-properties-common gnome-terminal
-
-  install_nodejs:
-    description: installing specific nodejs version
-    steps:
-      - run:
-          name: nodejs14 package
-          command: |
-            curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-
-  install_awscli:
-    description: aws command-line tool is used to run aws commands which interact with aws console
-    steps:
-      - run:
-          name: awscli version2
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-
-  install_ansible:
-    description: configuration management tool for managing host i.e servers via ssh
-    steps:
-      - run:
-          name: ansible
-          command: |
-            sudo add-apt-repository --yes --update ppa:ansible/ansible
-            sudo apt install ansible
-
   notify_on_crash:
     description: Notify slack channel with custorm message
     steps:
@@ -94,14 +57,16 @@ commands:
 jobs:
   build-frontend:
     docker:
-      - image: cimg/base:stable
+      - image: python:3.10-alpine3.16
     steps:
       - checkout
       - restore_cache:
           keys: [frontend-build]
-      # install dependencies
-      - install-dependencies
-      - install_nodejs
+
+      - run:
+          name: install dependencies 
+          command: |
+            apk add --update --no-cache nodejs npm curl
       - run:
           name: Build front-end
           command: |
@@ -116,14 +81,16 @@ jobs:
 
   build-backend:
     docker:
-      - image: cimg/base:stable
+      - image: python:3.10-alpine3.16
     steps:
       - checkout
       - restore_cache:
           keys: [backend-build]
-      # install dependencies
-      - install-dependencies
-      - install_nodejs
+
+      - run:
+          name: install dependencies 
+          command: |
+            apk add --update --no-cache nodejs npm curl
       - run:
           name: Back-end build
           command: |
@@ -138,14 +105,16 @@ jobs:
 
   test-frontend:
     docker:
-      - image: cimg/base:stable
+      - image: python:3.10-alpine3.16
     steps:
       - checkout
       - restore_cache:
           keys: [frontend-test]
-      # install dependencies
-      - install-dependencies
-      - install_nodejs
+
+      - run:
+          name: install dependencies 
+          command: |
+            apk add --update --no-cache nodejs npm curl
       - run:
           name: Run frontend Tests
           command: |
@@ -160,14 +129,16 @@ jobs:
 
   test-backend:
     docker:
-      - image: cimg/base:stable
+      - image: python:3.10-alpine3.16
     steps:
       - checkout
       - restore_cache:
           keys: [backend-test]
-      # install dependencies
-      - install-dependencies
-      - install_nodejs
+
+      - run:
+          name: install dependencies 
+          command: |
+            apk add --update --no-cache nodejs npm curl
       - run:
           name: Run backend tests
           command: |
@@ -182,14 +153,16 @@ jobs:
 
   scan-frontend:
     docker:
-      - image: cimg/base:stable
+      - image: python:3.10-alpine3.16
     steps:
       - checkout
       - restore_cache:
           keys: [frontend-scan]
-      # install dependencies
-      - install-dependencies
-      - install_nodejs
+
+      - run:
+          name: install dependencies 
+          command: |
+            apk add --update --no-cache nodejs npm curl
       - run:
           name: Run frontend scan
           command: |
@@ -204,14 +177,16 @@ jobs:
 
   scan-backend:
     docker:
-      - image: cimg/base:stable
+      - image: python:3.10-alpine3.16
     steps:
       - checkout
       - restore_cache:
           keys: [backend-scan]
-      # install dependencies
-      - install-dependencies
-      - install_nodejs
+
+      - run:
+          name: install dependencies 
+          command: |
+            apk add --update --no-cache nodejs npm curl
       - run:
           name: Run backend Scan
           command: |
@@ -266,19 +241,17 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: cimg/base:stable
+      - image: python:3.10-alpine3.16
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["48:43:be:13:81:cd:4e:51:35:9a:d4:d7:e2:0d:43:c1"]
+          fingerprints: ["9a:4e:7e:27:a9:ea:af:8c:da:b9:ed:79:8e:c3:5a:28"]
       - attach_workspace:
           at: ~/
-
-      # install Dependencies
-      - install-dependencies
-      - install_ansible
-      - install_awscli
-
+      - run:
+          name: install dependencies 
+          command: |
+            apk add --update --no-cache aws-cli curl ansible
       - run:
           name: Configure server
           command: |
@@ -291,16 +264,16 @@ jobs:
 
   run-migrations:
     docker:
-      - image: cimg/base:stable
+      - image: python:3.10-alpine3.16
     steps:
       - checkout
       - restore_cache:
           keys: [backend-build]
 
-      # install Dependencies
-      - install-dependencies
-      - install_awscli
-      - install_nodejs
+      - run:
+          name: install dependencies 
+          command: |
+            apk add --update --no-cache aws-cli nodejs npm curl
       - run:
           name: Run migrations
           command: |
@@ -325,17 +298,16 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: cimg/base:stable
+      - image: python:3.10-alpine3.16
     steps:
       - checkout
       - restore_cache:
           keys: [frontend-build]
 
-      # # install nodejs
-      - install_nodejs
-      - install_awscli
-      - install-dependencies
-
+      - run:
+          name: install dependencies 
+          command: |
+            apk add --update --no-cache aws-cli nodejs npm curl
       - run:
           name: Get backend url
           command: |
@@ -361,27 +333,21 @@ jobs:
   deploy-backend:
     docker:
       # Docker image here that supports Ansible
-      - image: cimg/base:stable
+      - image: python:3.10-alpine3.16
     steps:
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: ["48:43:be:13:81:cd:4e:51:35:9a:d4:d7:e2:0d:43:c1"]
+          fingerprints: ["9a:4e:7e:27:a9:ea:af:8c:da:b9:ed:79:8e:c3:5a:28"]
       # attach workspace
       - attach_workspace:
           at: ~/
-      # # install nodejs, awscli and ansible
-      - install-dependencies
-      - install_nodejs
-      - install_awscli
-      - install_ansible
       - run:
-          name: Install dependencies
+          name: install dependencies 
           command: |
-            cd backend
-            npm install
+            apk add --update --no-cache aws-cli nodejs npm ansible curl tar gzip
       - run:
-          name: Package Backend
+          name: compress Backend files
           command: |
             cd backend
             npm install
@@ -405,13 +371,14 @@ jobs:
   smoke-test:
     docker:
       # Lightweight Docker image
-      - image: cimg/base:stable
+      - image: python:3.10-alpine3.16
     steps:
       # Checkout code from git
       - checkout
-      # Install dependencies
-      - install_awscli
-      - install_nodejs
+      - run:
+          name: install dependencies 
+          command: |
+            apk add --update --no-cache aws-cli nodejs npm curl
       - run:
           name: Get backend url and run Backend smoke test
           command: |
@@ -457,18 +424,18 @@ workflows:
           requires: [build-frontend]
       - scan-backend:
           requires: [build-backend]
-      - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          filters:
-            branches:
-              only: [test-dev]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [run-migrations]
-      - deploy-backend:
-          requires: [run-migrations]
-      - smoke-test:
-          requires: [deploy-backend, deploy-frontend]
+      # - deploy-infrastructure:
+      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      #     filters:
+      #       branches:
+      #         only: [test-dev]
+      # - configure-infrastructure:
+      #     requires: [deploy-infrastructure]
+      # - run-migrations:
+      #     requires: [configure-infrastructure]
+      # - deploy-frontend:
+      #     requires: [run-migrations]
+      # - deploy-backend:
+      #     requires: [run-migrations]
+      # - smoke-test:
+      #     requires: [deploy-backend, deploy-frontend]
