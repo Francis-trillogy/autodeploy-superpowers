@@ -29,32 +29,20 @@
     path: ~/backend_app_dir
     state: directory
 
-- name: "Unarchive backend files"
-  unarchive:
-    src:  ~/project/.circleci/ansible/roles/deploy/files/
-    dest: home/ubuntu/backend_app_dir/artifact.tar.gz
+- name: "Copy compressed files to instance"
+  become: true
+  copy:
+    src:  ~/project/artifact.tar.gz
+    dest: /home/ubuntu/backend_app_dir/artifact.tar.gz
 
-- name: "Installing Node Dependencies"
-  shell: |
-
-    npm i
-
-- name: "Executing Node app with PM2"
-  shell: |
-    npm run build
-    sudo npm install forever -g
-    sudo npm install ts-node -g
-    forever start -c "ts-node -r tsconfig-paths/register -r dotenv/config src/main.ts" ./
-
-  register: execute_node
-
-- name: print message
-  debug:
-    msg: "{{ execute_node.stdout_lines }}"
-
-- name: "Configure pm2 to start as service"
+- name: "Start app"
   become: true
   shell: |
-    env PATH=$PATH:/usr/local/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu
+    cd /home/ubuntu/backend_app_dir/artifact.tar.gz
+    tar xzvf artifact.tar.gz
+    npm install
+    npm run build
+    npm stop all
+    npm start npm --start
 
   
