@@ -418,14 +418,14 @@ jobs:
       - destroy-environment
       - revert-migrations
       
-cleanup:
-  cloudfront-update:
+  cleanup:
     docker:
       # Lightweight Docker image
       - image: python:3.10-alpine3.16
     steps:
       # Checkout code from git
       - checkout
+      
       - run:
           name: install dependencies 
           command: |
