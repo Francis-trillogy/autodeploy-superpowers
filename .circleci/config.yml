@@ -419,21 +419,22 @@ jobs:
             --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
             echo Current Workflow ID: "${CIRCLE_WORKFLOW_ID:0:7}"
       # Here's where you will add some code to rollback on failure
+      - notify_on_success
+      - notify_on_crash
       - destroy-environment
       - revert-migrations
       
   cleanup:
+  
     docker:
-      # Lightweight Docker image
-      - image: python:3.10-alpine3.16
+      - image: amazon/aws-cli:latest
+
     steps:
-      # Checkout code from git
       - checkout
-      
       - run:
-          name: install dependencies 
+          name: install tar and gzip
           command: |
-            apk add --update --no-cache aws-cli nodejs npm curl tar gzip
+            yum -y install tar gzip curl
       - run:
           name: Remove old stacks and files
           command: |
@@ -450,6 +451,11 @@ jobs:
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
             fi
+      # Rollback
+      - notify_on_success
+      - notify_on_crash
+      - destroy-environment
+      - revert-migrations
             
 # # Workflows-how jobs will execute
 workflows:
