@@ -322,21 +322,26 @@ jobs:
           command: |
             apk add --update --no-cache aws-cli nodejs npm ansible curl tar gzip
       - run:
-          name: Backend package
+          name: install npm dependencies 
           command: |
             cd backend
             npm install
+      - run:
+          name: Backend package
+          command: |
+            cd backend
             npm run build
             tar -czf artifact.tar.gz dist/* package*
             cd ..
             mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
-            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files 
+            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
       - run:
           name: Deploy backend
           command: |
             export TYPEORM_MIGRATIONS_DIR=./migrations
             export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
             export TYPEORM_MIGRATIONS=./migrations/*.ts
+            
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
