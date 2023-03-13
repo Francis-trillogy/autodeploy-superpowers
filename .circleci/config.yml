@@ -450,11 +450,6 @@ jobs:
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
             fi
-      # Rollback
-      - notify_on_success
-      - notify_on_crash
-      - destroy-environment
-      - revert-migrations
             
 # # Workflows-how jobs will execute
 workflows:
